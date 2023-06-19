@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Игровая сессия</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #characterInfo {
+            background-color: #f2f2f2;
+            width: 20%;
+            height: 20vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: 2px solid #ccc;
+        }
+
+        #gameActivity {
+            background-color: #000;
+            width: 60%;
+            height: 50vh;
+            position: absolute;
+            top: 0;
+            left: 20%;
+            border: 2px solid #fff;
+        }
+
+        #activePlayers {
+            background-color: #eee;
+            width: 20%;
+            height: 20vh;
+            position: absolute;
+            top: 0;
+            right: 0;
+            border: 2px solid #bbb;
+        }
+
+        #gameInterface {
+            background-color: #ccc;
+            width: 100%;
+            height: 10vh;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #999;
+        }
+    </style>
+</head>
+<body>
+    <div id="characterInfo">
+        <h2>Информация о персонаже</h2>
+        <p>Имя: Иван</p>
+        <p>Уровень: 5</p>
+        <p>Здоровье: 80%</p>
+        <!-- Добавьте другую информацию о персонаже -->
+    </div>
+
+    <div id="gameActivity"></div>
+
+    <div id="activePlayers">
+        <h2>Активные игроки</h2>
+        <ul id="playerList">
+            <!-- Оставьте этот элемент пустым -->
+        </ul>
+    </div>
+
+    <div id="gameInterface">
+        <!-- Добавьте элементы игрового интерфейса, такие как кнопки, панели управления и т.д. -->
+    </div>
+
+    <script>
+        // Генерация случайного идентификатора
+        function generateSessionId() {
+            var timestamp = Date.now().toString();
+            var randomNum = Math.floor(Math.random() * 10000).toString();
+            return timestamp + randomNum;
+        }
+
+        // Получение параметров из URL
+        function getParameterByName(name) {
+            var url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Получаем параметры из URL
+        var params = new URLSearchParams(window.location.search);
+        var playerName = params.get('playerName');
+        var sessionId = params.get('sessionId');
+
+        // Проверяем наличие логина игрока и идентификатора сессии
+        if (playerName && sessionId) {
+            // Добавляем логин игрока в список "Активные игроки"
+            addPlayer(playerName);
+        } else {
+            // Если отсутствуют параметры playerName и sessionId, перенаправляем обратно на index.html
+            window.location.href = "index.html";
+        }
+
+        // Если идентификатор сессии не указан в URL, генерируем новый
+        if (!sessionId) {
+            sessionId = generateSessionId();
+            // Переадресация на URL с указанием сгенерированного идентификатора сессии
+            window.location.href = "game.html?playerName=" + encodeURIComponent(playerName) + "&sessionId=" + encodeURIComponent(sessionId);
+        }
+
+        // Вывод информации об игровой сессии
+        console.log("Player Name: " + playerName);
+        console.log("Session ID: " + sessionId);
+
+        function addPlayer(playerName) {
+            var playerList = document.getElementById('playerList');
+            var listItem = document.createElement('li');
+            listItem.textContent = playerName;
+            playerList.appendChild(listItem);
+        }
+    </script>
+</body>
+</html>
